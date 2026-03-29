@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CHINO S3X v4</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        :root { --red: #ff0000; --gold: #ffcc00; --bg: #000; --card: #0d0d0d; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        /* NOTIFICACIÓN NEÓN */
+        #toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: rgba(255,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 0.8rem; transition: 0.5s; z-index: 10001; box-shadow: 0 0 20px var(--red); white-space: nowrap; }
+        #toast.show { bottom: 50px; }
+
+        /* LOGIN */
+        #login-screen { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .logo { width: 180px; filter: drop-shadow(0 0 15px var(--red)); margin-bottom: 10px; }
+        .input-key { width: 80%; max-width: 300px; padding: 18px; background: #080808; border: 1px solid #1a1a1a; color: var(--red); border-radius: 15px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 1rem; }
+
+        /* BOTONES */
+        .btn { width: 80%; max-width: 300px; padding: 18px; background: var(--red); color: #fff; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; box-shadow: 0 5px 20px rgba(255,0,0,0.3); transition: 0.3s; }
+        .btn:active { transform: scale(0.95); }
+
+        /* PANEL */
+        #panel { display: none; width: 90%; max-width: 380px; flex-direction: column; background: var(--card); border-radius: 30px; border: 1px solid #111; padding: 25px; box-shadow: 0 0 40px rgba(0,0,0,1); }
+        .header-title { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #1a1a1a; padding-bottom: 15px; }
+        .header-title h1 { font-size: 1.4rem; letter-spacing: 3px; color: #fff; text-shadow: 0 0 10px var(--red); }
+
+        .option { background: #080808; padding: 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #151515; }
+        .option b { font-size: 0.9rem; letter-spacing: 0.5px; }
+
+        /* SWITCHES */
+        .switch { position: relative; width: 45px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider-sw { position: absolute; cursor: pointer; inset: 0; background-color: #222; transition: .4s; border-radius: 34px; }
+        .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: #555; transition: .4s; border-radius: 50%; }
+        input:checked + .slider-sw { background-color: var(--red); box-shadow: 0 0 10px rgba(255,0,0,0.4); }
+        input:checked + .slider-sw:before { transform: translateX(21px); background-color: #fff; }
+
+        /* SLIDER */
+        .slider-box { background: #080808; padding: 20px; border-radius: 18px; border: 1px solid #151515; margin-top: 10px; }
+        .track { width: 100%; height: 5px; background: #222; border-radius: 5px; position: relative; margin-top: 15px; }
+        #fill { position: absolute; height: 100%; background: var(--red); border-radius: 5px; width: 0%; box-shadow: 0 0 10px var(--red); }
+        input[type="range"] { -webkit-appearance: none; position: absolute; width: 100%; background: transparent; top: -8px; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #fff; border: 3px solid var(--red); box-shadow: 0 0 10px var(--red); }
+    </style>
+</head>
+<body>
+
+<div id="toast">MENSAJE</div>
+
+<div id="login-screen">
+    <img src="logo.png" class="logo" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
+    <h1 style="margin-bottom: 30px; font-size: 1.5rem; letter-spacing: 2px;">CHINO <span style="color:var(--gold)">S3X</span></h1>
+    <input type="text" id="key-input" class="input-key" placeholder="TOKEN DE ACESSO">
+    <button class="btn" onclick="validar()">ENTRAR NO PAINEL</button>
+</div>
+
+<div id="panel">
+    <div class="header-title">
+        <h1>CHINO <span style="color:var(--red)">S3X</span></h1>
+    </div>
+
+    <div class="option">
+        <b>Precisão HS</b>
+        <label class="switch">
+            <input type="checkbox" id="hs">
+            <span class="slider-sw"></span>
+        </label>
+    </div>
+
+    <div class="option">
+        <b>Aimbot Disfarçado</b>
+        <label class="switch">
+            <input type="checkbox" id="aim">
+            <span class="slider-sw"></span>
+        </label>
+    </div>
+
+    <div class="slider-box">
+        <div style="display:flex; justify-content:space-between; font-size: 0.75rem; font-weight: bold; color: #888;">
+            <span>SENSIBILIDADE ATIVA</span>
+            <span id="sensi-val" style="color:var(--red); font-size: 1rem;">0%</span>
+        </div>
+        <div class="track">
+            <div id="fill"></div>
+            <input type="range" min="0" max="100" value="0" oninput="updateSensi(this.value)">
+        </div>
+    </div>
+
+    <button class="btn" style="width: 100%; margin-top: 25px;" onclick="inyectar()">INJETAR AGORA</button>
+    <p style="text-align: center; font-size: 0.6rem; color: #333; margin-top: 15px; letter-spacing: 4px;">POWERED BY SENSI CHEAT</p>
+</div>
+
+<script>
+    const firebaseConfig = { databaseURL: "https://chinos3x-9a98d-default-rtdb.firebaseio.com/" };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const db = firebase.database();
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function validar() {
+        const k = document.getElementById('key-input').value.trim().toUpperCase();
+        if(!k) { showToast("DIGITE O TOKEN!"); return; }
+        
+        const hwid = navigator.userAgent.replace(/\D/g, "") + window.screen.width;
+        const ahora = new Date().getTime();
+
+        db.ref('tokens/' + k).once('value').then(s => {
+            if(s.exists()){
+                let d = s.val();
+                if(d.hwid !== "vacio" && d.hwid !== hwid) { showToast("BLOQUEADO: KEY JÁ USADA!"); return; }
+
+                if(d.expira === 0) {
+                    let final = ahora + (d.horas * 3600000);
+                    db.ref('tokens/' + k).update({ expira: final, hwid: hwid });
+                    entrar();
+                } else if(ahora > d.expira) {
+                    showToast("TOKEN EXPIRADO!");
+                } else { entrar(); }
+            } else { showToast("TOKEN NÃO ENCONTRADO!"); }
+        });
+    }
+
+    function entrar() {
+        document.getElementById('login-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('panel').style.display = 'flex';
+        }, 400);
+    }
+
+    function updateSensi(v) {
+        document.getElementById('sensi-val').innerText = v + "%";
+        document.getElementById('fill').style.width = v + "%";
+    }
+
+    function inyectar() {
+        const isHS = document.getElementById('hs').checked;
+        const isAim = document.getElementById('aim').checked;
+
+        if(!isHS && !isAim) {
+            showToast("ATIVE UMA OPÇÃO PRIMEIRO!");
+            return;
+        }
+
+        showToast("INJETANDO CONFIGURAÇÕES...");
+        setTimeout(() => {
+            showToast("SUCESSO! ABRINDO JOGO...");
+            setTimeout(() => window.location.href = "freefire://", 1500);
+        }, 2000);
+    }
+</script>
+</body>
+</html>
