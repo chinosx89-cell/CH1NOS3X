@@ -3,110 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CHINO S3X | PREMIUM</title>
+    <title>CHINO S3X | SENSI CHEATS</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root { --red: #ff0000; --bg: #000000; --card: #0d0d0d; --border: #1a1a1a; }
+        :root { --red: #ff0000; --bg: #000000; --card: #0a0a0a; --border: #151515; }
         
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; user-select: none; }
         
         body { background: var(--bg); color: #fff; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        /* NOTIFICACIÓN NEÓN (Sustituye a la alerta fea) */
+        /* NOTIFICACIÓN TIPO TOAST */
         #toast { 
             position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); 
-            background: rgba(255,0,0,0.9); color: white; padding: 15px 30px; 
+            background: rgba(255,0,0,0.95); color: white; padding: 15px 30px; 
             border-radius: 50px; font-weight: bold; font-size: 0.8rem; 
-            transition: 0.5s; z-index: 10001; box-shadow: 0 0 20px var(--red); 
+            transition: 0.5s; z-index: 10001; box-shadow: 0 0 25px var(--red); 
             white-space: nowrap; text-transform: uppercase;
         }
         #toast.show { bottom: 50px; }
 
-        /* LOGIN */
+        /* PANTALLA DE INICIO (LOGIN) */
         #login-screen { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .logo-login { width: 180px; filter: drop-shadow(0 0 15px var(--red)); margin-bottom: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        /* TITULOS EN ROJO TOTAL */
-        .chino-title { font-size: 2.2rem; font-weight: 900; color: var(--red); letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,0,0.7); margin-bottom: 30px; }
-
-        .input-key { width: 80%; max-width: 300px; padding: 18px; background: #050505; border: 1px solid #1a1a1a; color: var(--red); border-radius: 15px; text-align: center; font-weight: 800; margin-bottom: 15px; transition: 0.3s; }
-        .input-key:focus { border-color: var(--red); box-shadow: 0 0 15px rgba(255,0,0,0.4); }
-
-        .btn-main { width: 80%; max-width: 300px; padding: 18px; background: var(--red); color: #fff; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 30px rgba(255,0,0,0.3); }
-
-        /* PANEL PRINCIPAL */
-        #panel { display: none; width: 92%; max-width: 380px; background: var(--card); border-radius: 35px; border: 1px solid #111; flex-direction: column; padding: 25px; box-shadow: 0 0 50px rgba(0,0,0,1); }
+        .logo-login { width: 160px; filter: drop-shadow(0 0 15px var(--red)); margin-bottom: 15px; }
         
-        /* LOGO Y TITULO EN EL PANEL */
-        .panel-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #1a1a1a; padding-bottom: 15px; }
-        .logo-panel { width: 60px; filter: drop-shadow(0 0 10px var(--red)); margin-bottom: 10px; }
-        .panel-title { color: var(--red); font-size: 1.3rem; font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
+        /* LETRAS ROJAS EN EL INICIO */
+        .chino-red-text { font-size: 2.5rem; font-weight: 900; color: var(--red); letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,0,0.8); margin-bottom: 35px; }
 
-        /* OPCIONES BONITAS */
-        .option-item { background: #070707; padding: 18px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #151515; }
-        .option-item b { font-size: 0.85rem; letter-spacing: 0.5px; }
-        .val-red { color: var(--red); font-weight: 900; margin-right: 12px; text-shadow: 0 0 8px rgba(255,0,0,0.4); }
+        .input-box { width: 85%; max-width: 300px; padding: 20px; background: #050505; border: 1px solid #1a1a1a; color: var(--red); border-radius: 20px; text-align: center; font-weight: 800; margin-bottom: 20px; font-size: 1rem; transition: 0.3s; }
+        .input-box:focus { border-color: var(--red); box-shadow: 0 0 15px rgba(255,0,0,0.4); }
 
-        /* SWITCHES */
-        .switch { position: relative; width: 44px; height: 24px; }
+        .btn-red { width: 85%; max-width: 300px; padding: 20px; background: var(--red); color: #fff; border: none; border-radius: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 30px rgba(255,0,0,0.4); transition: 0.2s; }
+        .btn-red:active { transform: scale(0.96); }
+
+        /* PANEL INTERNO */
+        #panel { display: none; width: 92%; max-width: 390px; background: var(--card); border-radius: 40px; border: 1px solid #111; flex-direction: column; padding: 30px; box-shadow: 0 0 60px rgba(0,0,0,1); }
+        
+        /* LOGO SENSICHEATS ARRIBA EN OPCIONES */
+        .header-internal { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #151515; }
+        .logo-internal { width: 70px; filter: drop-shadow(0 0 12px var(--red)); margin-bottom: 10px; }
+        
+        /* LETRAS ROJAS DENTRO DEL PANEL */
+        .panel-brand { color: var(--red); font-size: 1.5rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 15px rgba(255,0,0,0.6); }
+
+        /* OPCIONES DISEÑO PREMIUM */
+        .card-opt { background: #000; padding: 18px 22px; border-radius: 22px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #121212; }
+        .card-opt b { font-size: 0.9rem; color: #eee; letter-spacing: 0.5px; }
+        .pct-label { color: var(--red); font-weight: 900; margin-right: 15px; font-size: 1rem; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
+
+        /* SWITCHES ROJOS */
+        .switch { position: relative; width: 46px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider-sw { position: absolute; cursor: pointer; inset: 0; background-color: #1a1a1a; transition: .4s; border-radius: 34px; }
-        .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: #333; transition: .4s; border-radius: 50%; }
-        input:checked + .slider-sw { background-color: var(--red); }
-        input:checked + .slider-sw:before { transform: translateX(20px); background-color: #fff; }
+        .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: #444; transition: .4s; border-radius: 50%; }
+        input:checked + .slider-sw { background-color: var(--red); box-shadow: 0 0 10px var(--red); }
+        input:checked + .slider-sw:before { transform: translateX(22px); background-color: #fff; }
 
-        /* SLIDER DE SENSIBILIDAD */
-        .slider-container { background: #070707; padding: 20px; border-radius: 20px; border: 1px solid #151515; margin-top: 5px; }
-        .slider-info { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 900; color: #666; margin-bottom: 15px; }
-        .track { width: 100%; height: 6px; background: #151515; border-radius: 10px; position: relative; }
+        /* BARRA DE SENSIBILIDAD */
+        .sensi-container { background: #000; padding: 22px; border-radius: 25px; border: 1px solid #121212; margin-top: 5px; }
+        .sensi-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 900; color: #555; margin-bottom: 15px; }
+        .track { width: 100%; height: 6px; background: #111; border-radius: 10px; position: relative; }
         #fill { position: absolute; height: 100%; background: var(--red); border-radius: 10px; width: 0%; box-shadow: 0 0 15px var(--red); }
         input[type="range"] { -webkit-appearance: none; position: absolute; width: 100%; background: transparent; top: -8px; cursor: pointer; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 22px; width: 22px; border-radius: 50%; background: #fff; border: 4px solid var(--red); box-shadow: 0 0 10px var(--red); }
-
-        #log-area { background: #000; border-radius: 15px; padding: 15px; font-family: monospace; font-size: 0.7rem; color: var(--red); margin-top: 15px; height: 90px; overflow-y: auto; display: none; border: 1px solid #111; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
 <div id="toast">MENSAGEM</div>
 
 <div id="login-screen">
     <img src="logo.png" class="logo-login" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
-    <h1 class="chino-title">CHINO S3X</h1>
-    <input type="text" id="token" class="input-key" placeholder="TOKEN DE ACESSO">
-    <button class="btn-main" onclick="validar()">ENTRAR NO PAINEL</button>
+    <h1 class="chino-red-text">CHINO S3X</h1>
+    <input type="text" id="token" class="input-box" placeholder="TOKEN DE ACESSO">
+    <button class="btn-red" onclick="validar()">ACESSAR PAINEL</button>
 </div>
 
 <div id="panel">
-    <div class="panel-header">
-        <img src="logo.png" class="logo-panel" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
-        <div class="panel-title">CHINO S3X</div>
+    <div class="header-internal">
+        <img src="logo.png" class="logo-internal" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
+        <div class="panel-brand">CHINO S3X</div>
     </div>
 
-    <div class="option-item">
+    <div class="card-opt">
         <b>Precisão HS</b>
         <div style="display:flex; align-items:center;">
-            <span class="val-red">65%</span>
+            <span class="pct-label">65%</span>
             <label class="switch"><input type="checkbox" id="hs"><span class="slider-sw"></span></label>
         </div>
     </div>
 
-    <div class="option-item">
+    <div class="card-opt">
         <b>Aimbot Disfarçado</b>
         <div style="display:flex; align-items:center;">
-            <span class="val-red">32%</span>
+            <span class="pct-label">32%</span>
             <label class="switch"><input type="checkbox" id="aim"><span class="slider-sw"></span></label>
         </div>
     </div>
 
-    <div class="slider-container">
-        <div class="slider-info">
+    <div class="sensi-container">
+        <div class="sensi-header">
             <span>SENSIBILIDADE ATIVA</span>
-            <span id="pct" style="color:var(--red); font-size: 1rem;">0%</span>
+            <span id="pct-val" style="color:var(--red); font-size: 1.1rem;">0%</span>
         </div>
         <div class="track">
             <div id="fill"></div>
@@ -114,12 +114,12 @@
         </div>
     </div>
 
-    <div id="log-area"></div>
-    <button class="btn-main" id="btn-inj" style="width: 100%; margin-top: 20px;" onclick="inyectar()">INJETAR AGORA</button>
-    <p style="text-align: center; font-size: 0.6rem; color: #222; margin-top: 15px; letter-spacing: 5px;">SENSI CHEAT PRO</p>
+    <button class="btn-red" id="btn-inj" style="width: 100%; margin-top: 25px;" onclick="inyectar()">INJETAR AGORA</button>
+    <p style="text-align: center; font-size: 0.6rem; color: #222; margin-top: 15px; letter-spacing: 5px; font-weight: bold;">SENSI CHEATS PRO</p>
 </div>
 
 <script>
+    // Conexión a tu Firebase
     const firebaseConfig = { databaseURL: "https://chinos3x-9a98d-default-rtdb.firebaseio.com/" };
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
@@ -133,7 +133,7 @@
 
     function validar() {
         const k = document.getElementById('token').value.trim().toUpperCase();
-        if(!k) { showToast("DIGITE O TOKEN!"); return; }
+        if(!k) { showToast("POR FAVOR, INSIRA O TOKEN!"); return; }
         
         const hwid = navigator.userAgent.replace(/\D/g, "") + window.screen.width;
         const ahora = new Date().getTime();
@@ -141,16 +141,16 @@
         db.ref('tokens/' + k).once('value').then(s => {
             if(s.exists()){
                 let d = s.val();
-                if(d.hwid !== "vacio" && d.hwid !== hwid) { showToast("BLOQUEADO EM OUTRO CELULAR!"); return; }
+                if(d.hwid !== "vacio" && d.hwid !== hwid) { showToast("TOKEN BLOQUEADO EM OUTRO APARELHO!"); return; }
 
                 if(d.expira === 0) {
                     let final = ahora + (d.horas * 3600000);
                     db.ref('tokens/' + k).update({ expira: final, hwid: hwid });
                     entrar();
                 } else if(ahora > d.expira) {
-                    showToast("TOKEN EXPIRADO!");
+                    showToast("ESTE TOKEN JÁ EXPIROU!");
                 } else { entrar(); }
-            } else { showToast("TOKEN NÃO ENCONTRADO!"); }
+            } else { showToast("TOKEN INVÁLIDO OU INEXISTENTE!"); }
         });
     }
 
@@ -163,33 +163,27 @@
     }
 
     function updateSensi(v) {
-        document.getElementById('pct').innerText = v + "%";
+        document.getElementById('pct-val').innerText = v + "%";
         document.getElementById('fill').style.width = v + "%";
     }
 
     function inyectar() {
-        if(!document.getElementById('hs').checked && !document.getElementById('aim').checked) {
-            showToast("ATIVE UMA OPÇÃO!");
+        const isHS = document.getElementById('hs').checked;
+        const isAim = document.getElementById('aim').checked;
+
+        if(!isHS && !isAim) {
+            showToast("ATIVE UMA OPÇÃO ANTES DE INJETAR!");
             return;
         }
 
         const btn = document.getElementById('btn-inj');
-        const log = document.getElementById('log-area');
         btn.disabled = true;
-        btn.innerText = "PROCESSANDO...";
-        log.style.display = "block";
+        btn.innerText = "INJETANDO...";
         
-        const msgs = ["Buscando local...", "Aplicando HS 65%...", "Sincronizando...", "Sucesso!"];
-        let i = 0;
-        let t = setInterval(() => {
-            log.innerHTML += msgs[i] + "<br>";
-            i++;
-            if(i >= msgs.length) {
-                clearInterval(t);
-                showToast("INJETADO COM SUCESSO!");
-                setTimeout(() => window.location.href = "freefire://", 1500);
-            }
-        }, 800);
+        setTimeout(() => {
+            showToast("CONCLUÍDO! ABRINDO FREE FIRE...");
+            setTimeout(() => window.location.href = "freefire://", 1500);
+        }, 2500);
     }
 </script>
 </body>
