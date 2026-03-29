@@ -3,24 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CHINO S3X - AUXILIO PRO</title>
+    <title>CHINO S3X | PREMIUM</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root { --red: #ff0000; --bg: #000000; --card: #0d0d0d; --border: #1a1a1a; --gray: #444; }
+        :root { --red: #ff0000; --bg: #000000; --card: #0d0d0d; --border: #1a1a1a; }
         
-        * { 
-            box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; 
-            margin: 0; padding: 0; outline: none; 
-            -webkit-tap-highlight-color: transparent;
-            user-select: none; -webkit-user-select: none;
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; user-select: none; }
         
         body { background: var(--bg); color: #fff; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        /* NOTIFICACIÓN NEÓN PERSONALIZADA (Adiós alertas blancas feos) */
+        /* NOTIFICACIÓN NEÓN (Sustituye a la alerta fea) */
         #toast { 
             position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); 
             background: rgba(255,0,0,0.9); color: white; padding: 15px 30px; 
@@ -30,162 +25,105 @@
         }
         #toast.show { bottom: 50px; }
 
-        /* PANTALLA DE LOGIN CON TU LOGO PULIDA */
-        #login-screen { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease-in-out; }
-        .login-card { width: 85%; max-width: 350px; text-align: center; }
+        /* LOGIN */
+        #login-screen { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .logo-login { width: 180px; filter: drop-shadow(0 0 15px var(--red)); margin-bottom: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* TITULOS EN ROJO TOTAL */
+        .chino-title { font-size: 2.2rem; font-weight: 900; color: var(--red); letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,0,0.7); margin-bottom: 30px; }
+
+        .input-key { width: 80%; max-width: 300px; padding: 18px; background: #050505; border: 1px solid #1a1a1a; color: var(--red); border-radius: 15px; text-align: center; font-weight: 800; margin-bottom: 15px; transition: 0.3s; }
+        .input-key:focus { border-color: var(--red); box-shadow: 0 0 15px rgba(255,0,0,0.4); }
+
+        .btn-main { width: 80%; max-width: 300px; padding: 18px; background: var(--red); color: #fff; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 30px rgba(255,0,0,0.3); }
+
+        /* PANEL PRINCIPAL */
+        #panel { display: none; width: 92%; max-width: 380px; background: var(--card); border-radius: 35px; border: 1px solid #111; flex-direction: column; padding: 25px; box-shadow: 0 0 50px rgba(0,0,0,1); }
         
-        /* LOGO SENSI CHEAT CON EFECTO NEÓN PULIDO */
-        .sensi-logo-integrated {
-            width: 100%; max-width: 250px; height: auto; margin-bottom: 25px;
-            filter: drop-shadow(0 0 10px rgba(255,0,0,0.4));
-            animation: sensiGlow 2.5s ease-in-out infinite;
-            display: block; margin-left: auto; margin-right: auto;
-        }
-        @keyframes sensiGlow { 0%, 100% { filter: drop-shadow(0 0 10px rgba(255,0,0,0.3)); } 50% { filter: drop-shadow(0 0 25px rgba(255,0,0,0.7)); } }
+        /* LOGO Y TITULO EN EL PANEL */
+        .panel-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #1a1a1a; padding-bottom: 15px; }
+        .logo-panel { width: 60px; filter: drop-shadow(0 0 10px var(--red)); margin-bottom: 10px; }
+        .panel-title { color: var(--red); font-size: 1.3rem; font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
 
-        /* CHINO S3X TOTALMENTE ROJO */
-        .logo-text { font-size: 2.3rem; font-weight: 900; color: var(--red); letter-spacing: -2px; margin-bottom: 30px; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,0,0,0.6); }
+        /* OPCIONES BONITAS */
+        .option-item { background: #070707; padding: 18px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #151515; }
+        .option-item b { font-size: 0.85rem; letter-spacing: 0.5px; }
+        .val-red { color: var(--red); font-weight: 900; margin-right: 12px; text-shadow: 0 0 8px rgba(255,0,0,0.4); }
 
-        /* INPUT PULIDO: SOLO BRILLO RED PRO, SIN TEXTO POR DEFECTO */
-        .login-card input { 
-            width: 100%; padding: 19px; background: #050505; border: 1px solid #111; 
-            color: var(--red); border-radius: 15px; text-align: center; font-weight: 800; 
-            margin-bottom: 15px; transition: 0.3s ease; font-size: 1rem;
-        }
-        .login-card input:focus { border-color: var(--red); box-shadow: 0 0 15px rgba(255,0,0,0.5); }
-        .login-card input::placeholder { color: transparent; }
-
-        /* BOTÓN PULIDO: "ENTRAR NO AUXILIO" */
-        .btn-inject { 
-            width: 100%; padding: 20px; background: var(--red); color: #fff; border: none; 
-            border-radius: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; 
-            margin-top: 15px; box-shadow: 0 10px 40px rgba(255,0,0,0.4); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
-            font-size: 1rem;
-        }
-        .btn-inject:active { transform: scale(0.97); }
-        .btn-inject:disabled { background: #333; box-shadow: none; cursor: wait; }
-
-        /* PANEL PRINCIPAL CHINO S3X x SENSI CHEAT CON LOGO INTEGRADO */
-        .main-panel { display: none; width: 90%; max-width: 380px; background: var(--card); border-radius: 30px; border: 1px solid #111; flex-direction: column; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,1); padding-bottom: 20px; }
-        
-        /* BARRA SUPERIOR PULIDA CON LOGO CHINO S3X ROJO */
-        .top-bar { padding: 20px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #111; background: #000; position: relative; }
-        /* LOGO INTEGRADO EN LA ENTRADA AL PANEL */
-        .top-mini-sensi { width: 50px; height: auto; filter: drop-shadow(0 0 10px var(--red)); margin-right: 10px; }
-        .top-bar-title { font-size: 1.1rem; letter-spacing: 2px; font-weight: 900; color: var(--red); text-transform: uppercase; text-shadow: 0 0 15px rgba(255,0,0,0.6); }
-
-        .content { flex: 1; padding: 25px; overflow-y: auto; }
-
-        /* SECCIONES ESTILO SENSI CHEAT */
-        .section-title { font-size: 0.65rem; color: var(--gray); font-weight: bold; text-transform: uppercase; margin: 15px 0 12px 5px; display: flex; align-items: center; gap: 8px; }
-        .section-title::after { content: ""; height: 1px; flex: 1; background: #111; }
-
-        /* OPCIONES CHINO S3X CON PORCENTAJES ORDENADOS Y DISEÑO BONITO */
-        .option-card { background: #0a0a0a; padding: 20px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #111; transition: 0.2s; }
-        .option-card:hover { border-color: #222; background: #0e0e0e; }
-        .info b { display: block; font-size: 0.85rem; color: #fff; font-weight: 800; letter-spacing: 0.5px; }
-        
-        /* PORCENTAJES ALINEADOS A LA DERECHA CON BRILLO PRO */
-        .val-pct-fixed { color: var(--red); font-weight: 900; font-size: 1rem; text-shadow: 0 0 10px rgba(255,0,0,0.5); margin-right: 15px; width: 50px; text-align: right; }
-
-        /* SLIDER CUSTOM CHINO S3X CON RASTRO ROJO DINÁMICO (DISEÑO BONITO) */
-        .slider-box { background: #0a0a0a; padding: 22px; border-radius: 18px; border: 1px solid #111; margin-bottom: 12px; }
-        .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; color: #aaa; }
-        
-        .range-container { position: relative; width: 100%; height: 6px; background: #222; border-radius: 3px; display: flex; align-items: center; }
-        /* RASTRO ROJO DINÁMICO */
-        #sensi-track { position: absolute; height: 100%; background: var(--red); border-radius: 3px; width: 0%; box-shadow: 0 0 10px var(--red); }
-        
-        input[type="range"] { 
-            -webkit-appearance: none; position: absolute; width: 100%; background: transparent; 
-            cursor: pointer; z-index: 10; top: -8px; margin: 0;
-        }
-        input[type="range"]::-webkit-slider-thumb { 
-            -webkit-appearance: none; height: 22px; width: 22px; border-radius: 50%; 
-            background: #fff; border: 4px solid var(--red); box-shadow: 0 0 10px var(--red); 
-        }
-
-        /* SWITCH CHINO S3X */
-        .switch { position: relative; width: 42px; height: 22px; }
+        /* SWITCHES */
+        .switch { position: relative; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider-sw { position: absolute; cursor: pointer; inset: 0; background-color: #1a1a1a; transition: .4s; border-radius: 34px; }
-        .slider-sw:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: #333; transition: .4s; border-radius: 50%; }
-        input:checked + .slider-sw { background-color: var(--red); box-shadow: 0 0 10px rgba(255,0,0,0.6); }
+        .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: #333; transition: .4s; border-radius: 50%; }
+        input:checked + .slider-sw { background-color: var(--red); }
         input:checked + .slider-sw:before { transform: translateX(20px); background-color: #fff; }
 
-        #log { background: #000; border-radius: 15px; padding: 18px; font-family: monospace; font-size: 0.65rem; color: var(--red); margin-top: 20px; height: 110px; overflow-y: auto; display: none; border: 1px solid #111; }
+        /* SLIDER DE SENSIBILIDAD */
+        .slider-container { background: #070707; padding: 20px; border-radius: 20px; border: 1px solid #151515; margin-top: 5px; }
+        .slider-info { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 900; color: #666; margin-bottom: 15px; }
+        .track { width: 100%; height: 6px; background: #151515; border-radius: 10px; position: relative; }
+        #fill { position: absolute; height: 100%; background: var(--red); border-radius: 10px; width: 0%; box-shadow: 0 0 15px var(--red); }
+        input[type="range"] { -webkit-appearance: none; position: absolute; width: 100%; background: transparent; top: -8px; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 22px; width: 22px; border-radius: 50%; background: #fff; border: 4px solid var(--red); box-shadow: 0 0 10px var(--red); }
+
+        #log-area { background: #000; border-radius: 15px; padding: 15px; font-family: monospace; font-size: 0.7rem; color: var(--red); margin-top: 15px; height: 90px; overflow-y: auto; display: none; border: 1px solid #111; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-<div id="toast">MENSAJE AQUÍ</div>
+<div id="toast">MENSAGEM</div>
 
 <div id="login-screen">
-    <div class="login-card">
-        <img src="logo.png" alt="SENSI CHEAT" class="sensi-logo-integrated" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
-        
-        <h1 class="logo-text">CHINO S3X</h1>
-        
-        <input type="text" id="key" placeholder="" autofocus>
-        
-        <button class="btn-inj-login btn-inject" onclick="validar()">ENTRAR NO AUXILIO</button>
-    </div>
+    <img src="logo.png" class="logo-login" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
+    <h1 class="chino-title">CHINO S3X</h1>
+    <input type="text" id="token" class="input-key" placeholder="TOKEN DE ACESSO">
+    <button class="btn-main" onclick="validar()">ENTRAR NO PAINEL</button>
 </div>
 
-<div class="main-panel" id="panel">
-    <div class="top-bar">
-        <img src="logo.png" alt="Mini Logo" class="top-mini-sensi" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
-        <b class="top-bar-title">CHINO S3X</b>
+<div id="panel">
+    <div class="panel-header">
+        <img src="logo.png" class="logo-panel" onerror="this.src='https://i.ibb.co/3W6n6qH/logo.png'">
+        <div class="panel-title">CHINO S3X</div>
     </div>
 
-    <div class="content">
-        <div class="section-title">Ajustes de Combate</div>
-        
-        <div class="option-card">
-            <div class="info"><b>Precisão HS</b></div>
-            <span class="val-pct-fixed">65%</span>
-            <label class="switch"><input type="checkbox" id="hs-switch"><span class="slider-sw"></span></label>
+    <div class="option-item">
+        <b>Precisão HS</b>
+        <div style="display:flex; align-items:center;">
+            <span class="val-red">65%</span>
+            <label class="switch"><input type="checkbox" id="hs"><span class="slider-sw"></span></label>
         </div>
-
-        <div class="option-card">
-            <div class="info"><b>Aimbot Disfarçado</b></div>
-            <span class="val-pct-fixed">32%</span>
-            <label class="switch"><input type="checkbox" id="aimbot-switch"><span class="slider-sw"></span></label>
-        </div>
-
-        <div class="section-title">Sensibilidade (v4 PRO Dinâmica)</div>
-
-        <div class="slider-box">
-            <div class="slider-header">
-                <span>SENSI ATIVA</span>
-                <span id="sensi-val" style="color:var(--red); font-size:1.1rem; font-weight:900; text-shadow: 0 0 15px rgba(255,0,0,0.6);">0%</span>
-            </div>
-            <div class="range-container">
-                <div id="sensi-track"></div>
-                <input type="range" min="0" max="100" value="0" oninput="updateSensi(this.value)">
-            </div>
-        </div>
-
-        <div class="section-title">Otimizações</div>
-
-        <div class="option-card">
-            <div class="info"><b>Segurança Anti-Cheat</b></div>
-            <label class="switch"><input type="checkbox" checked disabled><span class="slider-sw"></span></label>
-        </div>
-
-        <div id="log"></div>
-        <button class="btn-inject" id="btn-inj" onclick="inyectar()">INJETAR AUXILIO PRO</button>
-        <p style="text-align:center; font-size: 0.7rem; color: #222; margin-top: 15px; letter-spacing: 5px; font-weight: bold; text-transform: uppercase;">SENSI CHEAT</p>
     </div>
+
+    <div class="option-item">
+        <b>Aimbot Disfarçado</b>
+        <div style="display:flex; align-items:center;">
+            <span class="val-red">32%</span>
+            <label class="switch"><input type="checkbox" id="aim"><span class="slider-sw"></span></label>
+        </div>
+    </div>
+
+    <div class="slider-container">
+        <div class="slider-info">
+            <span>SENSIBILIDADE ATIVA</span>
+            <span id="pct" style="color:var(--red); font-size: 1rem;">0%</span>
+        </div>
+        <div class="track">
+            <div id="fill"></div>
+            <input type="range" min="0" max="100" value="0" oninput="updateSensi(this.value)">
+        </div>
+    </div>
+
+    <div id="log-area"></div>
+    <button class="btn-main" id="btn-inj" style="width: 100%; margin-top: 20px;" onclick="inyectar()">INJETAR AGORA</button>
+    <p style="text-align: center; font-size: 0.6rem; color: #222; margin-top: 15px; letter-spacing: 5px;">SENSI CHEAT PRO</p>
 </div>
 
 <script>
-    // Tu configuración oficial conectada a TU FIREBASE (Mantén tu DB original)
     const firebaseConfig = { databaseURL: "https://chinos3x-9a98d-default-rtdb.firebaseio.com/" };
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
 
-    // FUNCIÓN DE NOTIFICACIÓN NEÓN CUSTOM (Adiós alertas blancas feos)
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.innerText = msg;
@@ -194,77 +132,64 @@
     }
 
     function validar() {
-        const k = document.getElementById('key').value.trim().toUpperCase();
+        const k = document.getElementById('token').value.trim().toUpperCase();
         if(!k) { showToast("DIGITE O TOKEN!"); return; }
         
-        const btnLogin = document.querySelector('#login-screen .btn-inject');
-        btnLogin.innerText = "VALIDANDO...";
-        btnLogin.disabled = true;
+        const hwid = navigator.userAgent.replace(/\D/g, "") + window.screen.width;
+        const ahora = new Date().getTime();
 
         db.ref('tokens/' + k).once('value').then(s => {
             if(s.exists()){
-                document.getElementById('login-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('panel').style.display = 'flex';
-                }, 500);
-            } else {
-                showToast("❌ TOKEN INVÁLIDO NO SISTEMA CHINO!");
-                btnLogin.innerText = "ENTRAR NO AUXILIO";
-                btnLogin.disabled = false;
-            }
-        }).catch(e => {
-            btnLogin.innerText = "ENTRAR NO AUXILIO";
-            btnLogin.disabled = false;
+                let d = s.val();
+                if(d.hwid !== "vacio" && d.hwid !== hwid) { showToast("BLOQUEADO EM OUTRO CELULAR!"); return; }
+
+                if(d.expira === 0) {
+                    let final = ahora + (d.horas * 3600000);
+                    db.ref('tokens/' + k).update({ expira: final, hwid: hwid });
+                    entrar();
+                } else if(ahora > d.expira) {
+                    showToast("TOKEN EXPIRADO!");
+                } else { entrar(); }
+            } else { showToast("TOKEN NÃO ENCONTRADO!"); }
         });
     }
 
-    // ACTUALIZA EL PORCENTAJE Y EL RASTRO ROJO DE LA SENSIBILIDAD
-    function updateSensi(val) {
-        document.getElementById('sensi-val').innerText = val + "%";
-        document.getElementById('sensi-track').style.width = val + "%";
+    function entrar() {
+        document.getElementById('login-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('panel').style.display = 'flex';
+        }, 400);
+    }
+
+    function updateSensi(v) {
+        document.getElementById('pct').innerText = v + "%";
+        document.getElementById('fill').style.width = v + "%";
     }
 
     function inyectar() {
-        // VERIFICAR SI AL MENOS UNA OPCIÓN ESTÁ ACTIVADA ANTES DE INYECTAR
-        const isHS = document.getElementById('hs-switch').checked;
-        const isAimbot = document.getElementById('aimbot-switch').checked;
-
-        if(!isHS && !isAimbot) {
-            showToast("❌ ATIVE UMA OPÇÃO PRIMEIRO!");
+        if(!document.getElementById('hs').checked && !document.getElementById('aim').checked) {
+            showToast("ATIVE UMA OPÇÃO!");
             return;
         }
 
         const btn = document.getElementById('btn-inj');
-        const log = document.getElementById('log');
+        const log = document.getElementById('log-area');
         btn.disabled = true;
         btn.innerText = "PROCESSANDO...";
         log.style.display = "block";
-        log.innerHTML = "";
-
-        const lines = [
-            "<i class='fas fa-sync fa-spin' style='color:#fff'></i> Iniciando logs...",
-            "<i class='fas fa-check'></i> Precisão 65% Ativada...",
-            "<i class='fas fa-check'></i> Aimbot Disfarçado 32% Aplicado...",
-            "<i class='fas fa-check'></i> Sensibilidade Dinâmica Aplicada...",
-            "<i class='fas fa-shield-alt'></i> Bypass Proteção Gold v4 Ativo...",
-            "<b style='color:#00ff00; font-size:0.75rem;'>SISTEMA GOLD PRONTO! ABRIR JOGO.</b>"
-        ];
-
+        
+        const msgs = ["Buscando local...", "Aplicando HS 65%...", "Sincronizando...", "Sucesso!"];
         let i = 0;
         let t = setInterval(() => {
-            log.innerHTML += lines[i] + "<br>";
-            log.scrollTop = log.scrollHeight; // Auto-scroll
+            log.innerHTML += msgs[i] + "<br>";
             i++;
-            if(i >= lines.length){
+            if(i >= msgs.length) {
                 clearInterval(t);
-                btn.innerText = "INJETADO CON SUCESSO!";
-                showToast("✅ SUCESSO! ABRINDO GAME...");
-                setTimeout(() => {
-                    window.location.href = "freefire://";
-                }, 1500);
+                showToast("INJETADO COM SUCESSO!");
+                setTimeout(() => window.location.href = "freefire://", 1500);
             }
-        }, 900);
+        }, 800);
     }
 </script>
 </body>
